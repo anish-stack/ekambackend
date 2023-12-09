@@ -506,7 +506,7 @@ exports.FreedownloadAudioBooks = async (req, res) => {
 
     // Check if the audio book is paid
     if (audioBook.isPaid) {
-      return res.redirect(`http://localhost:3000/Paid/${audioBookId}`);
+      return res.redirect(`https://ekamfront.vercel.app/Paid/${audioBookId}`);
     }
 
     // Find the requested audio links in the audio book's links
