@@ -68,7 +68,7 @@ async function verificationLink(token, email, isActivate, resetTime) {
         await newUser.save();
   
         // You can send the activation link in the response or via email to the user
-        const activationLink = `https://ekambackend.onrender.com/api/v1/activate?token=${activationToken}&email=${encodeURIComponent(email)}`;
+        const activationLink = `http://localhost:4000/api/v1/activate?token=${activationToken}&email=${encodeURIComponent(email)}`;
 
         const options = {
           email,
@@ -132,9 +132,9 @@ async function verificationLink(token, email, isActivate, resetTime) {
             </head>
             <body>
               <img class="logo" src="https://i.postimg.cc/MH9R2XLM/ekam-innocations-high-resolution-logo-black-removebg-preview.png" alt="Ekam Innovations Logo">
-              <div class="headline">Welcome to Ekam Innovations!</div>
+              <div class="headline">Welcome to Ekam Inocations!</div>
               <div class="message">
-                At Ekam Innovations, we believe in the power of innovating education and educating innovations to shape lives and nurture future leaders. You have successfully been registered to use Ekam Innovations as a <em>Student</em>.
+                At Ekam Inocations, we believe in the power of innovating education and educating innovations to shape lives and nurture future leaders. You have successfully been registered to use Ekam Innovations as a <em>Student</em>.
               </div>
               <a class="cta-button" href="${activationLink}">Visit Account and Start Managing</a>
             </body>
@@ -142,7 +142,7 @@ async function verificationLink(token, email, isActivate, resetTime) {
           `,
         };
         
-  
+        console.log(activationLink)
         // Send the activation email
         await sendEmail(options);
   
@@ -207,10 +207,7 @@ exports.activateAccount = async (req, res) => {
   
       const user = await verificationLink(token, email, true, null);
       if(user){
-        return res.status(200).json({
-          success: true,
-          message: 'Account activated successfully',
-        });
+        return res.redirect('https://ekamfront.vercel.app/activate-account/336259449494422343434ehsyysdbxfssun/user-giv/ltm=opopm/Activate');
       }
 
        
