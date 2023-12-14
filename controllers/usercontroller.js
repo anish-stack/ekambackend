@@ -65,87 +65,176 @@ async function verificationLink(token, email, isActivate, resetTime) {
   
       try {
         // Save the user to the database
-        await newUser.save();
   
         // You can send the activation link in the response or via email to the user
-        const activationLink = `https://ekambackend.onrender.com/api/v1/activate?token=${activationToken}&email=${encodeURIComponent(email)}`;
+        const activationLink = `http://localhost:4000/api/v1/activate?token=${activationToken}&email=${encodeURIComponent(email)}`;
 
         const options = {
           email,
           subject: "Activate Your Account",
-          message: `
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-              <meta charset="UTF-8">
-              <meta http-equiv="X-UA-Compatible" content="IE=edge">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Activate Your Account</title>
-              <style>
-                body {
-                  font-family: 'Helvetica', 'Arial', sans-serif;
-                  background-color: #fff;
-                  margin: 0;
-                  padding: 20px;
-                  text-align: center;
-                }
-        
-                .logo {
-                  width: 155px;
-                  height: 155px;
-                  margin-bottom: 20px;
-                }
-        
-                .headline {
-                  color: #444;
-                  font-size: 36px;
-                  margin-bottom: 20px;
-                }
-        
-                .message {
-                  color: #666;
-                  font-size: 16px;
-                  margin-bottom: 20px;
-                }
-        
-                .cta-button {
-                  background-color: #674299;
-                  border-radius: 4px;
-                  color: #fff;
-                  display: inline-block;
-                  font-size: 18px;
-                  font-weight: normal;
-                  line-height: 50px;
-                  text-align: center;
-                  text-decoration: none;
-                  width: 350px;
-                  -webkit-text-size-adjust: none;
-                  cursor: pointer;
-                  display: block;
-                  margin: 0 auto;
-                }
-                a{
-                  color: #fff!important;
-                  text-decoration: none!important;
-                }
-              </style>
-            </head>
-            <body>
-              <img class="logo" src="https://i.postimg.cc/MH9R2XLM/ekam-innocations-high-resolution-logo-black-removebg-preview.png" alt="Ekam Innovations Logo">
-              <div class="headline">Welcome to Ekam Inocations!</div>
-              <div class="message">
-                At Ekam Inocations, we believe in the power of innovating education and educating innovations to shape lives and nurture future leaders. You have successfully been registered to use Ekam Innovations as a <em>Student</em>.
-              </div>
-              <a class="cta-button" href="${activationLink}">Visit Account and Start Managing</a>
-            </body>
-            </html>
-          `,
+         message:`<!DOCTYPE html>
+         <html lang="en">
+         <head>
+           <meta charset="UTF-8">
+           <meta name="viewport" content="width=device-width, initial-scale=1.0">
+           <title>Ekam Innovations</title>
+           <style>
+             body {
+               font-family: 'Arial', sans-serif;
+               background-color: #f4f4f4;
+               margin: 0;
+               padding: 20px;
+             }
+         
+             .email-container {
+               max-width: 600px;
+               margin: 0 auto;
+               background-color: #fff;
+               padding: 20px;
+               border-radius: 10px;
+               background: rgba(255, 255, 255, 0.2);
+               border-radius: 16px;
+               box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+               backdrop-filter: blur(5px);
+               -webkit-backdrop-filter: blur(5px);
+               border: 1px solid rgba(255, 255, 255, 0.3);
+             }
+         
+             h1 {
+               color: #007bff;
+               text-align:center;
+             }
+         
+             p {
+               color: #333;
+             }
+         
+               .button-container {
+                             text-align: center;
+                             margin-top: 20px;
+                         }
+                         
+                         .btn {
+                             display: inline-block;
+                             padding: 10px 20px;
+                             background-color: #6835f3;
+                             color: #fff;
+                             text-decoration: none;
+                             border-radius: 5px;
+                             cursor: pointer;
+                             transition: background-color 0.3s ease;
+                         }
+                         
+                         .btn:hover {
+                             background-color: #0056b3;
+                         }
+                         a{
+                             color: #fff!important;
+                         }
+                         
+                         /* Additional styles for older versions of Internet Explorer */
+                         .btn {
+                             /* For IE 11 */
+                             display: -ms-inline-flexbox;
+                             -ms-inline-flex-align: center;
+                             -ms-inline-flex-pack: center;
+                         
+                             /* For IE 10 */
+                             display: -webkit-inline-box;
+                             -webkit-box-align: center;
+                             -webkit-box-pack: center;
+                         
+                             /* For IE 9 */
+                             display: inline-block;
+                             *zoom: 1;
+                             *display: inline;
+                         }
+                         .btn {
+                             mso-line-height-rule: exactly;
+                             display: inline-block;
+                             text-align: center;
+                             mso-hide: all;
+                         }
+                         
+                     
+         
+             .signature {
+               margin-top: 20px;
+               font-style: italic;
+             }
+             .logo {
+           width: 100%;
+           height: auto;
+           max-width: 100%;
+           -ms-interpolation-mode: bicubic; /* IE8 support */
+         }
+         
+         .email-container img {
+           max-width: 100%;
+           height: auto;
+           display: block; /* Ensures the image is centered */
+           margin: 0 auto; /* Centers the image */
+         }
+         
+             .footer {
+               margin-top: 40px;
+               padding-top: 20px;
+               border-top: 1px solid #ccc;
+               text-align: center;
+             }
+            .footer a {
+           color: #000!important;
+         }
+         
+             .logo {
+               max-width: 100%;
+               height: auto;
+               margin-bottom: 20px;
+             }
+           </style>
+         </head>
+         <body>
+           <div class="email-container">
+             <img class="logo" src="https://i.postimg.cc/MH9R2XLM/ekam-innocations-high-resolution-logo-black-removebg-preview.png" alt="Ekam Innovations Logo">
+         
+             <h1>Welcome to Ekam Innovations! 🌟</h1>
+             <p>
+               At Ekam Innovations, we believe in the power of innovating education and educating innovations to shape lives and nurture future leaders. 📚✨
+               We operate in three fundamental directions, each dedicated to fostering growth, innovation, and excellence in education. 🌐
+             </p>
+         
+             <p>
+               Congratulations on signing up, ${username}! Your journey with Ekam Innovations is about to begin. 🚀
+             </p>
+         
+             <p>
+               To activate your account, please click the button below:
+             </p>
+         
+             <div class="button-container">
+               <a href="${activationLink}" class="btn">Activate Account 🔐</a>
+             </div>
+         
+             <p class="signature">
+               Best regards,<br>
+               The Ekam Innovations Team 🌈
+             </p>
+           </div>
+         
+           <div class="footer">
+             <p>Stay connected with Ekam Innovations:</p>
+             <a href="https://www.ekaminnovations.com">Website</a> | <a href="https://www.linkedin.com/company/ekam-innovations">LinkedIn</a> | <a href="https://twitter.com/ekaminnovations">Twitter</a>
+           </div>
+         </body>
+         </html>
+         `
         };
         
         console.log(activationLink)
         // Send the activation email
         await sendEmail(options);
-  
+        await newUser.save();
+
         return res.status(201).json({
           success: true,
           message: 'Registration successful! Please Confirm Email Id',
@@ -212,10 +301,11 @@ exports.activateAccount = async (req, res) => {
 
        
        else {
-        return res.status(400).json({
-          success: false,
-          message: 'Invalid activation token or email',
-        });
+        
+        return res.redirect('https://ekamfront.vercel.app/*');
+
+
+      
       }
     } catch (error) {
       console.error(error);
