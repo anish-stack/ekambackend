@@ -104,6 +104,17 @@ exports.getMakePyamentProductInfo =async(req,res)=>{
     }
 };
 
+exports.getAllPayments = async (req, res) => {
+    try {
+        // Retrieve all payments sorted by the default _id field in descending order
+        const payments = await PurchaseModel.find().sort({ _id: -1 });
+
+        return res.status(200).json({ success: true, payments });
+    } catch (error) {
+        console.error('Error in getAllPayments:', error);
+        return res.status(500).json({ success: false, message: 'Internal server error.' });
+    }
+};
 
 
 
