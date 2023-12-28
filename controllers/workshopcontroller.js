@@ -1,75 +1,77 @@
 const Workshop = require("../model/workshop.model")
-const AudioBook  = require("../model/audioBooks.model")
+const AudioBook = require("../model/audioBooks.model")
 const ratings = require("../model/rating&reviews.model")
+const sendEmail = require('../utils/sendMail')
+const FreeSeminar = require("../model/FreeRegisterSeminars.model")
 
 const axios = require('axios');
 // Create workshop
 
 exports.createWorkshop = async (req, res) => {
-    try {
-      // Step 1: Extract data from the request body
-      const userId = req.user.id;
-      console.log(userId);
+  try {
+    // Step 1: Extract data from the request body
+    const userId = req.user.id;
+    console.log(userId);
 
-      const {
-        workshopName,
-        TrainerName,
-        SessionLink,
-        Passcode,
-        RecordSessionLink,
-        certiFicateLink,
-        WorkShopTitle,
-        WorkShopDate,
-        DemoVideo,
-        WorkShopThmbnail,
-        Price,
-        DiscountPrice,
-        Duration,
-        workShopType,
-        user
-      } = req.body;
-  
-      if(!userId){
-        return res.status(403).json({msg:"Unauthorized"})
-      }
+    const {
+      workshopName,
+      TrainerName,
+      SessionLink,
+      Passcode,
+      RecordSessionLink,
+      certiFicateLink,
+      WorkShopTitle,
+      WorkShopDate,
+      DemoVideo,
+      WorkShopThmbnail,
+      Price,
+      DiscountPrice,
+      Duration,
+      workShopType,
+      user
+    } = req.body;
 
-
-      // Step 2: Create a new workshop instance
-      const newWorkshop = new Workshop({
-        workshopName,
-        TrainerName,
-        SessionLink,
-        Passcode,
-        RecordSessionLink,
-        certiFicateLink,
-        WorkShopTitle,
-        WorkShopDate,
-        DemoVideo,
-        WorkShopThmbnail,
-        Price,
-        DiscountPrice,
-        Duration,
-        workShopType,
-        user:userId
-      });
-  
-      // Step 3: Save the workshop to the database
-      await newWorkshop.save();
-  
-      // Step 4: Respond with a success message
-      return res.status(201).json({
-        success: true,
-        message: "Workshop created successfully",
-        workshop: newWorkshop,
-      });
-    } catch (error) {
-      // Step 5: Handle any errors that might occur during the process
-      console.error(error);
-      return res.status(500).json({
-        success: false,
-        message: "Internal server error",
-      });
+    if (!userId) {
+      return res.status(403).json({ msg: "Unauthorized" })
     }
+
+
+    // Step 2: Create a new workshop instance
+    const newWorkshop = new Workshop({
+      workshopName,
+      TrainerName,
+      SessionLink,
+      Passcode,
+      RecordSessionLink,
+      certiFicateLink,
+      WorkShopTitle,
+      WorkShopDate,
+      DemoVideo,
+      WorkShopThmbnail,
+      Price,
+      DiscountPrice,
+      Duration,
+      workShopType,
+      user: userId
+    });
+
+    // Step 3: Save the workshop to the database
+    await newWorkshop.save();
+
+    // Step 4: Respond with a success message
+    return res.status(201).json({
+      success: true,
+      message: "Workshop created successfully",
+      workshop: newWorkshop,
+    });
+  } catch (error) {
+    // Step 5: Handle any errors that might occur during the process
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
 };
 
 // Update workshop
@@ -97,7 +99,7 @@ exports.updateWorkshop = async (req, res) => {
     const userId = req.user.id;
 
     // Step 3: Find the workshop by ID
-    const workshopId = req.params.id; 
+    const workshopId = req.params.id;
     const workshop = await Workshop.findById(workshopId);
 
     // Step 4: Check if the workshop exists
@@ -541,4 +543,260 @@ exports.FreedownloadAudioBooks = async (req, res) => {
   }
 };
 
+exports.registerForFreeSeminar = async (req, res) => {
+  try {
+    const { SeminarId } = req.params;
+    // Check if the seminarId is provided
+    if (!SeminarId) {
+      return res.status(400).json({
+        success: false,
+        msg: "Seminar ID is required",
+      });
+    }
 
+
+    // Check the existence of the workshop using findById
+    const checkWorkshop = await Workshop.findById(SeminarId);
+    console.log(checkWorkshop)
+    const {
+      WorkShopTitle,
+      WorkShopDate,
+      TrainerName,
+      WorkShopThmbnail,
+    } = checkWorkshop;
+
+    if (!checkWorkshop) {
+      return res.status(404).json({
+        success: false,
+        msg: "Workshop not found",
+      });
+    }
+    else {
+      const { Name, Email, contactNumber, occupation, schoolName } = req.body;
+ // Check if the email is already registered
+ const existingRegistration = await FreeSeminar.findOne({ Email, SeminarId });
+
+ if (existingRegistration) {
+   // Send an email notifying the user about their existing registration
+   const existingRegistrationOptions = {
+     email: Email,
+     subject: "Already Registered For Seminar",
+     message: `<!DOCTYPE html>
+     <html lang="en">
+     <head>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>Welcome to Ekam Innovations</title>
+       <style>
+         body {
+           font-family: 'Arial', sans-serif;
+           background-color: #f4f4f4;
+           margin: 0;
+           padding: 20px;
+         }
+
+         .email-container {
+           max-width: 600px;
+           margin: 0 auto;
+           background-color: #fff;
+           padding: 20px;
+           border-radius: 10px;
+           background: rgba(255, 255, 255, 0.2);
+           border-radius: 16px;
+           box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+           backdrop-filter: blur(5px);
+           -webkit-backdrop-filter: blur(5px);
+           border: 1px solid rgba(255, 255, 255, 0.3);
+         }
+
+         h1 {
+           color: #007bff;
+           text-align: center;
+         }
+
+         p {
+           color: #333;
+         }
+
+         .workshop-details {
+           margin-top: 20px;
+           border-top: 1px solid #ccc;
+           padding-top: 20px;
+         }
+
+         ul {
+           list-style-type: none;
+           padding: 0;
+         }
+
+         li {
+           margin-bottom: 10px;
+         }
+
+         img {
+           max-width: 100%;
+           height: auto;
+           display: block;
+           margin: 0 auto;
+         }
+       </style>
+     </head>
+     <body>
+       <div class="email-container">
+         <img src="https://i.postimg.cc/MH9R2XLM/ekam-innocations-high-resolution-logo-black-removebg-preview.png" alt="Ekam Innovations Logo">
+
+         <h1>Welcome to Ekam Innocations! 🌟</h1>
+         <p>Congratulations on Register For, ${WorkShopTitle}! Your journey with Ekam Innocations is about to begin. 🚀</p>
+
+         <div class="workshop-details">
+           <h2>Workshop Details:</h2>
+           <ul>
+           <li><img src="${WorkShopThmbnail}" alt="Workshop Thumbnail"></li>
+             <li><strong>Title:</strong> ${WorkShopTitle}</li>
+             <li><strong>Date:</strong> ${WorkShopDate}</li>
+             <li><strong>Trainer:</strong> ${TrainerName}</li>
+           
+            
+           </ul>
+         </div>
+       </div>
+  
+     
+       <div class="footer">
+         <p>Stay connected with Ekam Innocations:</p>
+         <a href="https://www.ekaminnocations.com">Website</a> 
+       </div>
+     </body>
+     </html>
+     `,
+   };
+
+   await sendEmail(existingRegistrationOptions);
+
+   return res.status(200).json({
+     success: true,
+     msg: "You are already enrolled in this seminar. An email has been sent for confirmation.",
+   });
+ }
+
+      const newRegister = new FreeSeminar({
+        Name,
+        Email,
+        contactNumber,
+        occupation,
+        schoolName,
+        SeminarId
+      })
+
+      const options = {
+        email:Email,
+        subject: "Successfull Register For Seminar ",
+       message:`<!DOCTYPE html>
+       <html lang="en">
+       <head>
+         <meta charset="UTF-8">
+         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+         <title>Welcome to Ekam Innovations</title>
+         <style>
+           body {
+             font-family: 'Arial', sans-serif;
+             background-color: #f4f4f4;
+             margin: 0;
+             padding: 20px;
+           }
+ 
+           .email-container {
+             max-width: 600px;
+             margin: 0 auto;
+             background-color: #fff;
+             padding: 20px;
+             border-radius: 10px;
+             background: rgba(255, 255, 255, 0.2);
+             border-radius: 16px;
+             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+             backdrop-filter: blur(5px);
+             -webkit-backdrop-filter: blur(5px);
+             border: 1px solid rgba(255, 255, 255, 0.3);
+           }
+ 
+           h1 {
+             color: #007bff;
+             text-align: center;
+           }
+ 
+           p {
+             color: #333;
+           }
+ 
+           .workshop-details {
+             margin-top: 20px;
+             border-top: 1px solid #ccc;
+             padding-top: 20px;
+           }
+ 
+           ul {
+             list-style-type: none;
+             padding: 0;
+           }
+ 
+           li {
+             margin-bottom: 10px;
+           }
+ 
+           img {
+             max-width: 100%;
+             height: auto;
+             display: block;
+             margin: 0 auto;
+           }
+         </style>
+       </head>
+       <body>
+         <div class="email-container">
+           <img src="https://i.postimg.cc/MH9R2XLM/ekam-innocations-high-resolution-logo-black-removebg-preview.png" alt="Ekam Innovations Logo">
+ 
+           <h1>Welcome to Ekam Innocations! 🌟</h1>
+           <p>Congratulations on Register For, ${WorkShopTitle}! Your journey with Ekam Innocations is about to begin. 🚀</p>
+ 
+           <div class="workshop-details">
+             <h2>Workshop Details:</h2>
+             <ul>
+             <li><img src="${WorkShopThmbnail}" alt="Workshop Thumbnail"></li>
+               <li><strong>Title:</strong> ${WorkShopTitle}</li>
+               <li><strong>Date:</strong> ${WorkShopDate}</li>
+               <li><strong>Trainer:</strong> ${TrainerName}</li>
+             
+              
+             </ul>
+           </div>
+         </div>
+    
+       
+         <div class="footer">
+           <p>Stay connected with Ekam Innocations:</p>
+           <a href="https://www.ekaminnocations.com">Website</a> 
+         </div>
+       </body>
+       </html>
+       `
+      };
+      await newRegister.save();
+      await sendEmail(options);
+      // Step 4: Respond with a success message
+      return res.status(201).json({
+        success: true,
+        message: "New Register created successfully",
+        workshop: newRegister,
+      });
+
+    }
+
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      msg: "Internal Server Error",
+    });
+  }
+};
