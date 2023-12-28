@@ -67,7 +67,7 @@ async function verificationLink(token, email, isActivate, resetTime) {
         // Save the user to the database
   
         // You can send the activation link in the response or via email to the user
-        const activationLink = `http://localhost:4000/api/v1/activate?token=${activationToken}&email=${encodeURIComponent(email)}`;
+        const activationLink = `https://ekambackend.onrender.com/api/v1/activate?token=${activationToken}&email=${encodeURIComponent(email)}`;
 
         const options = {
           email,
