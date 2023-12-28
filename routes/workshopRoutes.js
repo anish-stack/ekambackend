@@ -39,6 +39,7 @@ router.get('/getpdfFiles',getPdfFiles)
 
 
 router.get('/pay', genToken)
+router.post('/registerFreeSeminar/:SeminarId',registerForFreeSeminar)
 
 
 module.exports=router
