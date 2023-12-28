@@ -197,14 +197,14 @@ async function verificationLink(token, email, isActivate, resetTime) {
            <div class="email-container">
              <img class="logo" src="https://i.postimg.cc/MH9R2XLM/ekam-innocations-high-resolution-logo-black-removebg-preview.png" alt="Ekam Innovations Logo">
          
-             <h1>Welcome to Ekam Innovations! 🌟</h1>
+             <h1>Welcome to Ekam Innocations! 🌟</h1>
              <p>
                At Ekam Innovations, we believe in the power of innovating education and educating innovations to shape lives and nurture future leaders. 📚✨
                We operate in three fundamental directions, each dedicated to fostering growth, innovation, and excellence in education. 🌐
              </p>
          
              <p>
-               Congratulations on signing up, ${username}! Your journey with Ekam Innovations is about to begin. 🚀
+               Congratulations on signing up, ${username}! Your journey with Ekam Innocations is about to begin. 🚀
              </p>
          
              <p>
@@ -217,14 +217,11 @@ async function verificationLink(token, email, isActivate, resetTime) {
          
              <p class="signature">
                Best regards,<br>
-               The Ekam Innovations Team 🌈
+               The Ekam Innocations Team 🌈
              </p>
            </div>
          
-           <div class="footer">
-             <p>Stay connected with Ekam Innovations:</p>
-             <a href="https://www.ekaminnovations.com">Website</a> | <a href="https://www.linkedin.com/company/ekam-innovations">LinkedIn</a> | <a href="https://twitter.com/ekaminnovations">Twitter</a>
-           </div>
+     
          </body>
          </html>
          `
