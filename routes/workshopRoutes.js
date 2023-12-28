@@ -1,6 +1,6 @@
 const express = require('express')
 const { protect } = require('../middleware/auth')
-const { createWorkshop,updateWorkshop,deleteWorkshop,getWorkshops,makeAudioFiles,updateAudioBook,deleteAudioBooks,getSingleWorkShop,getAudioFiles,FreedownloadAudioBooks,getWorkShopByTrainerNameAndTitle,createReview, getSingleAudioFiles,getworkshopReview } = require('../controllers/workshopcontroller')
+const { createWorkshop,updateWorkshop,deleteWorkshop,getWorkshops,makeAudioFiles,updateAudioBook,deleteAudioBooks,getSingleWorkShop,getAudioFiles,FreedownloadAudioBooks,getWorkShopByTrainerNameAndTitle,createReview, getSingleAudioFiles,getworkshopReview, registerForFreeSeminar } = require('../controllers/workshopcontroller')
 const multer = require('multer');
 const storage = multer.memoryStorage();
 
@@ -40,6 +40,5 @@ router.get('/getpdfFiles',getPdfFiles)
 
 router.get('/pay', genToken)
 router.post('/registerFreeSeminar/:SeminarId',registerForFreeSeminar)
-
 
 module.exports=router
